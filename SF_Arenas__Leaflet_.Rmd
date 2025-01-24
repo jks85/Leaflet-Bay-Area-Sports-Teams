@@ -1,0 +1,57 @@
+---
+title: "January 25th 2025"
+date: ""
+output:
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+```{r packages, results='hide', message=FALSE, warning=FALSE}
+# install packages required for data processing and analysis}
+install.packages("leaflet", repos = "http://cran.us.r-project.org")
+library(leaflet)
+```
+
+```{r Chase}
+
+# Code creates map with location of arenas for the San Francisco Giants and 
+# the Golden State Warriors. 
+# Markers for each team contain a popup linking to the team website.
+# Current date is displayed in the top right corner
+
+current_date <- Sys.Date()
+
+# Chase Center latitude 37.768009 (North)
+# Chase Center longitude -122.387787 (West)
+# Oracle Park latitude 37.77861 (North)
+# Oracle Park longitude -122.389099 (West)
+
+# Latitude: 37.77861 North, Longitude: 122.389099 West
+
+# create data frame of lat/long for arenas
+arenas <- data.frame(Team = c('Giants', 'Warriors'), Arena = c('Oracle Park', 'Chase Center'),
+                     lat = c(37.77861,37.768009),
+                     lng = c(-122.389099,-122.387787))
+
+arenas_loc <- arenas[,c('lat','lng')]
+
+# links to team websites for popups
+team_sites <- 
+    c("<a href = 'https://www.mlb.com/giants'>Oracle Park: Home of the San Francisco Giants </a>",
+      "<a href = 'https://www.nba.com/warriors/'>Chase Center: Home of the Golden State Warriors </a>")
+
+arena_map <- arenas_loc |> 
+  leaflet() |>
+    addTiles() |> 
+      addMarkers(popup = team_sites) |> 
+        addControl(html = paste("Current Date:",current_date),
+                   position = "topright")
+
+arena_map
+```
